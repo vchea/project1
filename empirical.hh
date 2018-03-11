@@ -16,6 +16,9 @@
 
 #include <cassert>
 #include <vector>
+#include <memory>
+
+using namespace std;
 
 // Container class to store a minimum and maximum int.
 class min_max {
@@ -43,9 +46,19 @@ min_max min_max_algorithm(const std::vector<int>& values) {
 
   assert(!values.empty());
 
-  // TODO: replace this comment with working code
+  int minValue = values[0];
+  int maxValue = values[0];
+  int size = values.size(); //	Caching the size, so that loop doesn't query the same information again and again. 
+  for (int i = 1; i < values.size(); i++)
+  {
+	  if (values[i] > maxValue)
+		  maxValue = values[i];
 
-  return min_max(0, 0); // this is wrong, replace it with something correct
+	  if (values[i] < minValue)
+		  minValue = values[i];
+  }
+
+  return min_max(minValue, maxValue); // this is wrong, replace it with something correct
 }
 
 // Container class that stores a mode, i.e. an integer value, and the
@@ -75,9 +88,29 @@ mode mode_algorithm(const std::vector<int>& values) {
 
   assert(!values.empty());
 
-  // TODO: replace this comment with working code
+  bool have_best = false;
+  int best_value = values[0];
+  int best_count = 0;
+  int size = values.size();	//	Caching the size, so that loop doesn't query the same information again and again. 
+  int v_count = 0;
 
-  return mode(0, 1); // this is wrong, replace it with something correct
+  for (int i = 0; i < size; i++)
+  {
+	  v_count = 0;
+
+	  for (int j = 0; j < size; j++)
+		  if (values[i] == values[j])
+			  v_count++;
+
+	  if (have_best == false || v_count > best_count)
+	  {
+		  have_best = true;
+		  best_value = values[i];
+		  best_count = v_count;
+	  }
+  }
+
+  return mode(best_value, best_count);
 }
 
 // Return a pointer to a vector that contains the same integers as in
@@ -85,10 +118,18 @@ mode mode_algorithm(const std::vector<int>& values) {
 // be empty, in which case this function returns a pointer to an empty
 // vector.
 std::unique_ptr<std::vector<int>> sort_algorithm(const std::vector<int>& values) {
+	/*
+	// This method is a traditional method. 
+	vector<int> copy_values;
+	int size = values.size();
+	for (int i = 0; i < size; i++)
+		copy_values.push_back(values[i]);
+	*/
 
-  // TODO: replace this comment with working code
+	vector<int> *copy_values = new vector<int>(values);
 
-  // this is wrong, replace it with something correct
-  // return a pointer to a copy of the input
-  return std::unique_ptr<std::vector<int>>(new std::vector<int>(values));
+	sort(copy_values->begin(), copy_values->end());
+
+	// return a pointer to a copy of the input
+	return std::unique_ptr<std::vector<int>>(copy_values);
 }
